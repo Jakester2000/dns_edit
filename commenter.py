@@ -1,16 +1,5 @@
-import sys
 
-if "-h" in sys.argv:
-	print("This script can be used to comment out server entries in the config file")
-	sys.exit("Usage: [file] [application_name]")
-
-if len(sys.argv) < 3:
-	sys.exit("Too few arguments. Usage: [file] [application_name]")
-
-file = sys.argv[1]
-to_check = sys.argv[2:]
-
-def comment(application):
+def comment(file, application):
 	with open(file, 'r') as f:
 		lines = f.readlines()
 
@@ -42,6 +31,3 @@ def comment(application):
 				f.write(line)
 
 			line_counter += 1
-
-for title in to_check:
-	comment(title)
