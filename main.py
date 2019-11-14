@@ -1,4 +1,4 @@
-import commenter, uncommenter, writeToFile, helpScript, entryAdding
+import commenter, uncommenter, writeToFile, entryAdding
 import sys
 
 args = sys.argv
