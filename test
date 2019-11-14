@@ -1,10 +1,7 @@
 
 #facebook
 server=/facebook.com/8.8.8.8
-server=www.facebook.com/10.12.10.10
-server=www.facebook.com/10.12.10.10
 address=/facebook.com/152.65.0.101
-address=/facebook.com/125.63.75.25
 
 #twitter
 #server=/twitter.com/8.8.8.8

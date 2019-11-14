@@ -1,53 +1,96 @@
+import commenter, uncommenter, writeToFile, helpScript, entryAdding
 import sys
 
-import commenter
-import uncommenter
-import WriteToFile
-import helpScript
-import entryadding
-
-if len(sys.argv) < 2:
-	sys.exit("Too few arguments. Run '-h' for help")
-
-if "-h" in sys.argv:
-	helpScript.Help()
-
-if "-f" in sys.argv:
-	if sys.argv.index("-f") == len(sys.argv) - 1:
-			sys.exit("No argument given.") 
-	file = sys.argv[sys.argv.index("-f") + 1]
-else:
-	sys.exit("No file specified.")
-
-if "-t" in sys.argv:
-	if sys.argv.index("-t") == len(sys.argv) - 1:
-		sys.exit("No argument given.")
-	title = sys.argv[sys.argv.index("-t") + 1]
-else:
-	sys.exit("Please specify title.")
+args = sys.argv
 
 
-if "-u" in sys.argv:
-	uncommenter.uncomment(file, title)
 
-
-if "-c" in sys.argv:
-	commenter.comment(file, title)
-
-
-if "-w" in sys.argv:
-	if "-a" not in sys.argv or "-s" not in sys.argv or sys.argv.index("-a") == len(sys.argv) - 1 or sys.argv.index("-s") == len(sys.argv) - 1:
-		sys.exit("Server or address not specified.")
+def main():
+	if len(args) < 2:
+		sys.exit("Too few arguments. Run '-h' for help")
 	else:
-		server = sys.argv[sys.argv.index("-s") + 1]
-		address = sys.argv[sys.argv.index("-a") + 1]
-		WriteToFile.writeToFile(file, title, server, address)
+		handleArguments()
 
 
-if "-e" in sys.argv:
-	file = "test"
-	title = "facebook"
-	server = "www.facebook.com/10.12.10.10"
-	address = "www.facebook.com/125.75.63.26"
-	entryadding.addentry(file, title, server, address)
 
+def handleArguments():
+	
+	if "-h" in args:
+		help()
+
+
+	if "-f" in args and argumentGiven("-f"):
+		file = getIndex("-f")
+
+
+	if "-t" in args and argumentGiven("-t"):
+		title = getIndex("-t")
+
+
+	if "-a"  in args and argumentGiven("-a"):
+		address = getIndex("-a")
+
+
+	if "-s" in args and argumentGiven("-s"):
+		server = getIndex("-s")
+
+
+
+	if "-u" in args:
+		uncommenter.uncomment(file, title)
+
+
+	elif "-c" in args:
+		commenter.comment(file, title)
+
+
+	elif "-w" in args:
+		if not address and not server:
+			sys.exit("Server or address not specified.")
+		else:
+			writeToFile.write(file, title, server, address)
+
+
+	elif "-e" in args:
+		if not address and not server:
+			sys.exit("Server or address not specified.")
+		else:
+			entryAdding.addEntry(file, title, server, address)
+	
+
+
+
+def getIndex(to_find):
+	return args[args.index(to_find) + 1]
+
+
+
+def argumentGiven(to_check):
+	return True if args.index(to_check) != (len(args) - 1) else sys.exit("No argument given.")
+
+
+
+def help():
+	sys.exit('''=====================================================================================================
+				Commands -
+					-u uncomment = uncomment certain elements of the dnsconfig
+					-c comment = recomment certain elements of the dnsconfig
+					-w writeToFile = append new entries to the end of the config
+					-e entry adding = add an entry to an existing Title
+					-h Help-page = The command used to open the help-page
+
+					Options -
+					-f file input = this is the file path of the config file you want to be edited
+					-t title =  declare the title of the website the dns will be altering
+					-s server = used with the writeToFile and entryAdding scripts to add a server under a title- example - /google.com/8.8.8.8
+					-a address = /google.com/192.165.24.2
+
+					Examples of how the software works -
+						command: python3 main.py -u -f dnsconfig.txt -t Reddit
+						command: python3 main.py -c -f dnsconfig.txt -t Twitter
+						command: python3 main.py -w -f dnsconfig.txt -t bbc.co.uk -s /bbc.co.uk/8.8.8.8 -a /bbc.co.uk/162.52.101.28
+						command: python3 main.py -e -f dnsconfig.txt -t Reddit -s /reddit.com/8.8.8.8
+				=====================================================================================================''')
+
+
+main()
