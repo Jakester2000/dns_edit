@@ -1,31 +1,61 @@
+import writeToFile
+
 
 def addEntry(file, title, server, address):
+
+	if not title.startswith("#"):
+		title = "#" + title
+	
+	if address != "":
+		addAddress(file, title, address)
+
+	if server != "":
+		addServer(file, title, server)
+
+
+
+def makeArray(file):
 	with open(file, 'r') as f:
 		filestring = f.read()
-		linearray = str(filestring).splitlines()
-		if server != "":
-			linearray = addserveroraddress(server, "server", title, linearray)
-		elif address != "":
-			linearray = addserveroraddress(address, "address", title, linearray)
-	with open(file, 'w+') as f:
-		for i in range(0, len(linearray)):
-			f.write(linearray[i])
-			if "\n" not in linearray[i]:
-				f.write("\n")
+		return str(filestring).splitlines()
 
-def addServerOrAddress(entryType, name, title, linearray):	
-	i = 0
-	end = False
-	flag = False
-	while i < len(linearray) and end == False:
-		line = linearray[i]
-		i += 1
-		if line.startswith("#" + title):
-			print ("hello")
-			flag = True
-		if line.startswith(name) or line.startswith("#" + name):
-			linearray[i] = linearray[i]+ '\n' + name + "=" + entryType + "\n"
-			flag = False
-			end = True
-			break
-	return(linearray)
+
+
+def addAddress(file, title, address):
+	linearray = makeArray(file)
+
+	if title in linearray:
+		counter = getIndex(linearray, title) + 1
+
+		while counter < (len(linearray)):
+			if "address=" in linearray[counter] or "server=" in linearray[counter]:
+				counter += 1
+			else:
+				writeToFile.write(file, counter, f"address={address}\n")
+				return
+
+	else:
+		writeToFile.write(file, len(linearray), f"\n{title}\naddress={address}\n\n")
+
+
+
+def addServer(file, title, server):
+	linearray = makeArray(file)
+
+	if title in linearray:
+		counter = getIndex(linearray, title) + 1
+
+		while counter < (len(linearray) - 1):
+			if "server=" in linearray[counter]:
+				counter += 1
+			else:
+				writeToFile.write(file, counter, f"server={server}\n")
+				return
+
+	else:
+		writeToFile.write(file, len(linearray), f"\n{title}\nserver={server}\n\n")
+
+
+
+def getIndex(array, to_find):
+	return array.index(to_find)

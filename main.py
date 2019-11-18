@@ -1,4 +1,4 @@
-import commenter, uncommenter, writeToFile, entryAdding
+import commenter, uncommenter, writeToFile, entryAdding, mergingFile
 import sys
 
 args = sys.argv
@@ -20,19 +20,19 @@ def handleArguments():
 
 
 	if "-f" in args and argumentGiven("-f"):
-		file = getIndex("-f")
+		file = getArgument("-f")
 
 
 	if "-t" in args and argumentGiven("-t"):
-		title = getIndex("-t")
+		title = getArgument("-t")
 
 
 	if "-a"  in args and argumentGiven("-a"):
-		address = getIndex("-a")
+		address = getArgument("-a")
 
 
 	if "-s" in args and argumentGiven("-s"):
-		server = getIndex("-s")
+		server = getArgument("-s")
 
 
 
@@ -56,11 +56,22 @@ def handleArguments():
 			sys.exit("Server or address not specified.")
 		else:
 			entryAdding.addEntry(file, title, server, address)
-	
+
+
+	elif "-m" in args:
+		files = []
+		for arg in range(args.index("-m") + 1, len(args)):
+			files.append(args[arg])
+			
+		linearray1, linearray2 = mergingFile.readFiles(files[0], files[1])
+		output = mergingFile.compare(linearray1, linearray2)
+
+		for lst in output:
+			entryAdding.addEntry(files[0], lst[0], lst[1], lst[2])
 
 
 
-def getIndex(to_find):
+def getArgument(to_find):
 	return args[args.index(to_find) + 1]
 
 

@@ -1,4 +1,10 @@
 
-def write(file, title, server, address):
-	with open(file, 'a+') as f:
-		f.write(f'#{title}\nserver={server}\naddress={address}\n\n')
+def write(file, index, to_write):
+
+	with open(file, "r+") as f:
+		contents = f.readlines()
+
+	contents.insert(index, to_write)
+
+	with open(file, "w+") as f:
+		f.writelines(contents)
