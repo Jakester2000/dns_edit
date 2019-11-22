@@ -1,5 +1,4 @@
 
-
 def isTitle(line):
 	return ("#" in line and "=" not in line)
 
@@ -8,32 +7,12 @@ def readFiles(file1, file2):
 	with open(file1, 'r') as f:
 		filestring = f.read()
 		linearray = str(filestring).splitlines()
+
 	with open(file2, 'r') as f:
 		filestring2 = f.read()
 		linearray2 = str(filestring2).splitlines()
+
 	return(linearray, linearray2)
-
-
-def combine(positionOfTitleInArray1, positionOfTitleInArray2, linearray1, linearray2):
-	
-	for i in linearray1:
-
-		if not isTitle(linearray[positionOfTitleInArray1 + i]):
-			finalarray[i] = linearray1[positionOfTitleInArray1]
-			print(finalarray[i])
-			end = True
-		i += 1
-		if i == len(linearray1)-1:
-			end = True
-		if positionOfTitleInArray1 == len(linearray1)-1:
-			end = True
-
-
-def titleInArray(title, array):
-	for line in array:
-		if title in line:
-			return True
-	return False
 
 
 def getDetails(title, array):
@@ -45,28 +24,52 @@ def getDetails(title, array):
 
 		if title in array[index]:
 
-			if isTitle(array[index]) and index < len(array)+1:
+			if index < len(array)-1:
 				index += 1
 			
 			output.append(title)
 
 			while index < len(array)+1 and "=" in array[index]:
-				output.append(array[index].split("=")[1])
+				output.append(array[index])
 				index += 1
-
 	return output
 
 
 def compare(linearray1, linearray2):
-	temp = ""
-	flag = True
-	positionOfTitleInArray1 = 0
-	positionOfTitleInArray2 = 0
-
-	out = []
+	output = []
 
 	for line in linearray2:
-		if isTitle(line) and titleInArray(line, linearray2):
-			out.append(getDetails(line, linearray2))
+		if isTitle(line):
+			output.append(getDetails(line, linearray2))
+	return output
 
-	return out
+def WriteArrayToMain(ListofLists, linearray1, file):
+
+	with open(file, "r+") as f:
+		contents = f.readlines()
+
+		
+	for singlelist in ListofLists:
+		for item in singlelist:
+			if isTitle(item):
+				if item in linearray1:
+					
+					#we wanna write the single line list into the area under the
+					#title but without the first index of the single line list
+					nextline = linearray1.index(item) +1
+
+					with open(file, "r+") as f:
+						contents = f.readlines()
+
+					contents.insert(nextline, "\n".join(singlelist[1:]) + "\n")
+
+					with open(file, "w+") as f:
+						f.writelines(contents)
+
+				else:
+					with open(file, "w+") as f:
+						f.writelines(contents)
+						f.writelines("\n".join(singlelist)+ "\n\n")
+
+
+
