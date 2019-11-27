@@ -97,6 +97,7 @@ def argument_given(to_check):
 	return True if args.index(to_check) != (len(args) - 1) else sys.exit("No argument given.")
 
 def help():
+	print("NEEK")
 	sys.exit('''=====================================================================================================
 Commands -
 -u uncomment = uncomment certain elements of the dnsconfig
