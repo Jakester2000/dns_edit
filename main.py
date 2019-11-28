@@ -79,10 +79,8 @@ def handle_arguments(server, address):
 		final = merging_file.write_array_to_main(output, line_array_1, main_file)
 
 	elif "-d" in args:
-		# [CODE REVIEW] Remove pointless whitespace like this
 		try:
 			index = int(get_argument("-i"))
-
 		except:
 			sys.exit("error, this is not a number")
 
