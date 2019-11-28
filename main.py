@@ -1,4 +1,4 @@
-import commenter, uncommenter, write_to_file, entry_adding, merging_file, deletion_of_entrys
+import commenter, uncommenter, write_to_file, entry_adding, merging_file, deletion_of_entrys, remove_duplicates
 import sys
 
 server = ""
@@ -86,6 +86,9 @@ def handle_arguments(server, address):
 
 		array_of_entries = deletion_of_entrys.read_file(file)
 		deletion_of_entrys.delete_line(array_of_entries, index, file)
+	elif "-r" in args:
+		try:
+			remove_duplicates.remove_duplicates(file)
 
 # [CODE REVIEW] These don't need comments, so don't worry
 def get_argument(to_find):

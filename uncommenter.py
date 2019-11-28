@@ -1,27 +1,21 @@
 
 def uncomment(file, title):
-	"""
-	A function that takes the parameters 'file' and 'title'
-	it will uncomment all the entries underneath the provided title
-	if the entries are already uncommented no changes will be made
-	if the title doesnt exist it will output a corrosponding error message
-	"""
-	# [CODE REVIEW]
-	# Make more succinct. Use standards as written in 'main.py' 
-	# 	when talking about params, etc
+	''' A function that removes hashes from certain entries in config file
+
+	Parameters:
+		file: the name of the file that will be searched for duplicates
+	
+	Errors:
+		If duplicate not found then outputs message to inform user
+	'''
 	found = False
 	with open(file, 'r') as f:
 		lines = f.readlines()
-	#read the file into an array called lines stored in memory 
-	# ^^ [CODE REVIEW] Remove, pointless
 	with open(file, 'w') as f:
 		pass
-	# Overwrite file ready to write in data.
 	with open(file, 'a') as f:
 		line_counter = 0
 		while line_counter < len(lines):
-			#While the script is not at the end of the file
-			# ^^ [CODE REVIEW] Remove, pointless
 			line = lines[line_counter]
 			if line.strip('\n') == str("#" + title): 
 				found = True
