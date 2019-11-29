@@ -1,9 +1,7 @@
 def remove_duplicates(file):
 	''' A function that removes duplicate entries from file provided
-
 	Parameters:
 		file: the name of the file that will be searched for duplicates
-	
 	Errors:
 		duplicate_found: If False then outputs message to inform user
 	'''

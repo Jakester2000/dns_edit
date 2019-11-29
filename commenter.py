@@ -1,6 +1,5 @@
 def comment(file, title):
 	''' A function that copys text from a file into an array
-
 	Parameters:
 		file: the name of the file that will be editted
 		title: the title of the entry that will be commented out

@@ -1,11 +1,9 @@
 def write(file, index, to_write):
 	''' A function that writes to a specified line
-
 	Parameters:
 		file: the name of the file that will be written to
 		index: location to be written to
 		to_write: string that is going to be added
-	
 	Errors:
 		N/a
 	'''

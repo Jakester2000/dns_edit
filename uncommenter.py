@@ -1,11 +1,9 @@
 
 def uncomment(file, title):
 	''' A function that removes hashes from certain entries in config file
-
 	Parameters:
 		file: the name of the file that will be searched
 		title: the header of the entry were looking for
-	
 	Errors:
 		found: if title isnt found outputs an error message to inform user
 	'''
