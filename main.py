@@ -1,4 +1,4 @@
-import commenter, uncommenter, write_to_file, entry_adding, merging_file, deletion_of_entrys
+import commenter, uncommenter, write_to_file, entry_adding, merging_file, deletion_of_entrys, remove_duplicates
 import sys
 
 server = ""
@@ -12,24 +12,9 @@ def main():
 		handle_arguments(server, address)
 
 def handle_arguments(server, address):
-	''' [CODE REVIEW] Comment Title/Brief Description
-
-	More description if needed
-
-	Params:
-		server: ...
-		address: ...
-	Returns:
-	    (if application)
-	Errors:
-		Try/Catch exceptions noted here
-	'''
 	
 	if "-h" in args:
 		help()
-	# [CODE REVIEW] 
-	# There is another way to do this, may need to be more readable,
-	# 	i.e. with --file
 	if "-f" in args and argument_given("-f"):
 		file = get_argument("-f")
 
@@ -72,24 +57,25 @@ def handle_arguments(server, address):
 		try:
 			line_array_1, line_array_2 = merging_file.read_files(files[0], files[1])
 		except:
-		 	sys.exit("Use -h to ") #[CODE REVIEW] ...to what?
+		 	sys.exit("Use -h to open help script") 
 
 		main_file = files[0]
-		output = merging_file.compare(line_array_1, line_array_2)
+		output = merging_file.compare(line_array_2)
 		final = merging_file.write_array_to_main(output, line_array_1, main_file)
 
 	elif "-d" in args:
-		# [CODE REVIEW] Remove pointless whitespace like this
 		try:
 			index = int(get_argument("-i"))
-
 		except:
 			sys.exit("error, this is not a number")
 
 		array_of_entries = deletion_of_entrys.read_file(file)
 		deletion_of_entrys.delete_line(array_of_entries, index, file)
-
-# [CODE REVIEW] These don't need comments, so don't worry
+	elif "-r" in args:
+		try:
+			remove_duplicates.remove_duplicates(file)
+		except:
+			sys.exit("file not found")
 def get_argument(to_find):
 	return args[args.index(to_find) + 1]
 
@@ -97,7 +83,7 @@ def argument_given(to_check):
 	return True if args.index(to_check) != (len(args) - 1) else sys.exit("No argument given.")
 
 def help():
-	print("NEEK")
+	
 	sys.exit('''=====================================================================================================
 Commands -
 -u uncomment = uncomment certain elements of the dnsconfig
