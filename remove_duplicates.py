@@ -37,4 +37,3 @@ def remove_duplicates(file):
 	with open(file, "w+") as f:
 		f.writelines(lines)
 
-remove_duplicates()

@@ -1,5 +1,12 @@
-
 def comment(file, title):
+	''' A function that copys text from a file into an array
+
+	Parameters:
+		file: the name of the file that will be editted
+		title: the title of the entry that will be commented out
+	Errors:
+		found: If the title is not found then an error message is printed to inform the user
+	'''
 	found = False
 	with open(file, 'r') as f:
 		lines = f.readlines()

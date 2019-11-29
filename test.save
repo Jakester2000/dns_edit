@@ -1,0 +1,21 @@
+
+#facebook
+server=/facebook.com/8.8.8.8
+address=/facebook.com/152.65.0.101
+
+#twitter
+#server=/twitter.com/8.8.8.8
+#address=/twitter.com/156.25.6.1
+#address=/api.twitter.com/156.25.6.2
+
+#reddit
+#server=/reddit.org/15.15.15.15
+#address=/reddit.org/132.54.2.15
+
+#bbc news
+#server=/bbc.com/10.10.10.10
+#address=/bbc.com/162.142.24.5
+
+#google
+#server=/google.com/8.8.8.8/
+#address=/google.com/162.40.25.2/

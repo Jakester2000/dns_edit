@@ -3,10 +3,11 @@ def uncomment(file, title):
 	''' A function that removes hashes from certain entries in config file
 
 	Parameters:
-		file: the name of the file that will be searched for duplicates
+		file: the name of the file that will be searched
+		title: the header of the entry were looking for
 	
 	Errors:
-		If duplicate not found then outputs message to inform user
+		found: if title isnt found outputs an error message to inform user
 	'''
 	found = False
 	with open(file, 'r') as f:
