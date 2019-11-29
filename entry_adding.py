@@ -1,6 +1,17 @@
 import write_to_file
 
 def add_entry(file, title, server, address):
+	''' A function that is used to determine which function should be used to add entrys
+
+	Parameters: 
+		file: the name of the file that will be edited
+		title: the title that will be used to choose which part to add entries too
+		server: the server string that will be added if the user has inputted one
+		address: the address string that will be added if the user has inputted one
+	
+	Returns: 
+		N/a
+	'''
 	if not title.startswith("#"):
 		title = "#" + title
 	if address != "":
