@@ -16,65 +16,42 @@ def read_files(file1, file2):
 	with open(file2, 'r') as f:
 		file_string2 = f.read()
 		line_array2 = str(file_string2).splitlines()
+
 	return(line_array, line_array2)
 def get_details(title, array):
-	''' A function that gets all the servers / addresses corrosponding to the title
-	Parameters: 
-		title: the title that will be used to find the information about
-		array: all the text from the textfile that will be searched through
-	Returns: 
-		output: an array of all the details to be written back into the main file
-	'''
-	index = 0
+
+	current_title = ""
 	output = []
-	while index < len(array)-1:
-		index += 1
-		if title in array[index]:
-			if index < len(array)-1:
-				index += 1
-			output.append(title)
-			while index < len(array)+1 and "=" in array[index]:
-				output.append(array[index])
-				index += 1
+	
+	for i in range(array.index(title), len(array) - 1):
+		if is_title(array[i]) and array[i] != title:
+			break
+		elif array[i] != "":
+			output.append(array[i])
+		
 	return output
-def compare(line_array2):
-	''' A function that checks if a title exists and then concatonates it onto output
-	Parameters:
-		line_array2: the secondary file with the entries that are getting added
-	Returns: 
-		output: a list of entries to add to the main file
-	'''
-	output = []
-	for line in line_array2:
+def make_dictionary(line_array):
+	
+	dictionary_of_entries = {}
+	for line in line_array:
 		if is_title(line):
-			output.append(get_details(line, line_array2))
-	return output
-def write_array_to_main(list_of_lists, line_array1, file):
-	''' A function that writes the final array back into the file
-	Parameters: 
-		list_of_lists: each sub-list inside the list contains a block entry, including the title, server and address
-		line_array1: the array that holds the final strings to be written back into the file
-		file: the directory / name of the file
-	Returns: 
-		N/a
-	'''
-	with open(file, "r+") as f:
-		contents = f.readlines()
-	for single_list in list_of_lists:
-		for item in single_list:
-			if is_title(item):
-				if item in line_array1:
-					next_line = line_array1.index(item) +1
-					with open(file, "r+") as f:
-						contents = f.readlines()
-					contents.insert(next_line, "\n".join(single_list[1:]) + "\n")
+			dictionary_of_entries[line] = get_details(line, line_array)
 
-					with open(file, "w+") as f:
-						f.writelines(contents)
-				else:
-					with open(file, "w+") as f:
-						f.writelines(contents)
-						f.writelines("\n".join(single_list)+ "\n\n")
+	return dictionary_of_entries
+def write_array_to_main(entries_to_add, line_array1, file):
+	original_entries = make_dictionary(line_array1)
 
+	for entries in entries_to_add:
+		if entries in original_entries:
+			original_entries[entries] = entries_to_add[entries] + original_entries[entries]
+		else:
+			original_entries[entries] = entries_to_add[entries]
 
+	with open(file, 'w') as f:
+		for name, entries in original_entries.items():
+			f.write("\n" + name + "\n")
+			for entry in entries:
+				f.write(entry + "\n")
+		f.write("\n")
+		
 

@@ -60,9 +60,9 @@ def handle_arguments(server, address):
 		 	sys.exit("Use -h to open help script") 
 
 		main_file = files[0]
-		output = merging_file.compare(line_array_2)
-		final = merging_file.write_array_to_main(output, line_array_1, main_file)
-
+		dictionary_of_entries = merging_file.make_dictionary(line_array_2)
+		final = merging_file.write_array_to_main(dictionary_of_entries, line_array_1, main_file)
+		remove_duplicates.remove_duplicates(files[0])
 	elif "-d" in args:
 		try:
 			index = int(get_argument("-i"))

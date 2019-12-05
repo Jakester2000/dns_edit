@@ -1,4 +1,3 @@
-
 def uncomment(file, title):
 	''' A function that removes hashes from certain entries in config file
 	Parameters:

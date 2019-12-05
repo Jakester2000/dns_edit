@@ -23,9 +23,6 @@ def remove_duplicates(file):
 				else:
 					if line in line_to_check or "#" + line in line_to_check:
 						duplicate_found = True
-						print(line)
-						print(index_loop_1)
-						print(index_loop_2)
 						lines.pop(index_loop_2)
 						index_loop_2 -= 1
 				index_loop_2 += 1

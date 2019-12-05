@@ -21,6 +21,7 @@ def make_array(file):
 		file_string = f.read()
 		return str(file_string).splitlines()
 def add_address(file, title, address):
+	'''A function that writes to a file when given an address'''
 	print(title)
 	line_array = make_array(file)
 	if title in line_array:
@@ -34,6 +35,7 @@ def add_address(file, title, address):
 	else:
 		write_to_file.write(file, len(line_array), f"\n{title}\naddress={address}\n\n")
 def add_server(file, title, server):
+	'''A function that writes to a file when given an server'''
 	line_array = make_array(file)
 	if title in line_array:
 		counter = get_index(line_array, title) + 1
