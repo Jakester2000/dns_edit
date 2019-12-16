@@ -1,9 +1,19 @@
+import os
+import sys
+
 def is_title(line):
 	return ("#" in line and "=" not in line)
 
-class uncomment:
+def update_dnsmasq():
+	os.system("sudo systemctl restart dnsmasq")
 
-	def single(title, file):
+class commenter:
+
+	def __init__(self,file):
+		self.file = file
+
+	def uncomment_single(self, title):
+		file = self.file
 		found = False
 		with open(file, 'r') as f:
 			lines = f.readlines()
@@ -29,8 +39,9 @@ class uncomment:
 				print("error, title not found, please check the input and try again")
 			pass
 
-	def all(file):
+	def uncomment_all(self):
 
+		file = self.file
 		with open(file, 'r') as f:
 			lines = f.readlines()
 		with open(file, 'w') as f:
@@ -42,9 +53,8 @@ class uncomment:
 				else:
 					f.write(line)
 
-class comment:
-
-	def single(title, file):
+	def comment_single(self, title):
+		file = self.file
 		found = False
 		with open(file, 'r') as f:
 			lines = f.readlines()
@@ -72,7 +82,8 @@ class comment:
 			if found == False:
 				print("Title Couldn't be found, please check the usage and try again")
 
-	def all(file):
+	def comment_all(self):
+		file = self.file
 		with open(file, 'r') as f:
 			lines = f.readlines()
 		with open(file, 'w') as f:
@@ -118,8 +129,6 @@ class combine:
 
 	def write_array_to_main(entries_to_add, line_array_1, file):
 		original_entries = combine.make_dictionary(line_array_1)
-		#print(line_array_1)
-		#print(entries_to_add)
 		for entries in entries_to_add:
 			if entries in original_entries:
 				original_entries[entries] = entries_to_add[entries] + original_entries[entries]
@@ -140,7 +149,6 @@ class combine:
 		dictionary_of_entries = combine.make_dictionary(line_array_2)
 		final = combine.write_array_to_main(dictionary_of_entries, line_array_1, main_file)
 		
-
 	def remove_duplicates(file):
 		duplicate_found = False
 		index_loop_1 = 0
@@ -161,10 +169,8 @@ class combine:
 						if line in line_to_check or "#" + line in line_to_check:
 							duplicate_found = True
 							if index_loop_2 > index_loop_1:
-								print("1")
 								lines.pop(index_loop_2)
 							else:
-								print("2")
 								lines.pop(index_loop_1)
 							index_loop_2 -= 1
 					index_loop_2 += 1
@@ -174,13 +180,103 @@ class combine:
 		with open(file, "w+") as f:
 			f.writelines(lines)
 
+class add:
+
+	def __init__(self,file):
+		self.file = file
+
+	def presence_check(self, str_to_check):
+		file = self.file
+		temp_array = add.make_array(file)
+		if str_to_check in temp_array:
+			sys.exit("title already exists, when adding to an entry that already exists use add.ip")
+
+	def make_array(self):
+		file = self.file
+		with open(file, 'r') as f:
+			file_string = f.read()
+			return str(file_string).splitlines()
+
+	def full_add(self, title, address, server):
+		file = self.file
+		array_of_entries = add.make_array(file)
+		array_to_add = []
+		array_to_add.append(title)
+		array_to_add.append(server)
+		array_to_add.append(address)
+		new_entry = {
+					title:array_to_add
+		}
+		print(new_entry)
+		combine.write_array_to_main(new_entry, array_of_entries, file)
+		combine.remove_duplicates(file)
+
+	def server_add(self, title, server):
+		file = self.file
+		array_of_entries = add.make_array(file)
+		array_to_add = []
+		array_to_add.append(title)
+		array_to_add.append(server)
+		new_entry = {
+					title:array_to_add
+		}
+		print(new_entry)
+		combine.write_array_to_main(new_entry, array_of_entries, file)
+		combine.remove_duplicates(file)
+
+	def address_add(self, title, address):
+		file = self.file
+		array_of_entries = add.make_array(file)
+		array_to_add = []
+		array_to_add.append(title)
+		array_to_add.append(address)
+		new_entry = {
+					title:array_to_add
+		}
+		print(new_entry)
+		combine.write_array_to_main(new_entry, array_of_entries, file)
+		combine.remove_duplicates(file)
+		pass
+
+	def entry_adding(self, title, address, server):
+		file = self.file
+		if not title.startswith("#"):
+			title = "#" + title
+		add.presence_check(file, title)
+		if server != "" and address != "":
+			add.full_add(file, title, address, server)
+		elif address != "":
+			add.address_add(file, title, address)
+			pass	
+		elif server != "":
+			add.server_add(file, title, server)
+			pass
+		else:
+			print("Error, please check usage and try again")
+			
+	def ip_adding(self, title, ip):
+		file = self.file
+		if not title.startswith("#"):
+			title = "#" + title
+		temp_array = add.make_array(file)
+		if not title in temp_array:
+			sys.exit("title doesnt exist, when adding an entry that doesnt exist you should use entry adding")
+		print("test")
+	
+
+commenting = commenter("test")
+commenting.uncomment_all()
 
 
 
-combine.merge("test", "compare")
+	
+#add.ip_adding("test", "youtube", "asdasd")
 
-combine.remove_duplicates("test")
+#combine.merge("test", "compare")
 
+#combine.remove_duplicates("test")
+
+#update_dnsmasq()
 
 # class Car():
 # 	def __init__(self,color,doors,gears,speed):
