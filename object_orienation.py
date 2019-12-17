@@ -7,6 +7,46 @@ def is_title(line):
 def update_dnsmasq():
 	os.system("sudo systemctl restart dnsmasq")
 
+class help:
+	def script():
+		sys.exit("""
+===================================================================================================
+This is the help message for my dns_edit script, this help function will show you
+the correct sytnax to use the program.
+
+Functions:
+Commenter (-c)     Comment either all (-a) or single entries (-s) of the dnsconfig
+		   file, below are 2 examples of how to use the command, you always
+		   need to include a file path (-f) and depending on the usage you
+		   may need to include the title of the entry you want to comment out
+
+		   Example of usage:
+		   Comment all = python3 dns_edit.py -c -a -f dnsconfig.txt
+	   	   Comment Single Entry = python3 dns_edit.py -c -s -f dnsconfig.txt -t BT
+
+Uncommenter (-u)   Works similar to Commenter function, you can either Uncomment all (-a) 
+		   or single entries (-s) of the dnsconfig file, below I have included
+		   2 examples of how to use the Uncommneter function, Like-wise to the
+		   commenter function, you always need to include a file path (-f) and 
+		   depending on usage you may need to include the title of the entry you 
+		   wish to uncomment
+
+		   Example of usage:
+		   Uncomment all = python3 dns_edit.py -u -a -f dnsconfig.txt
+		   Uncomment Single Entry = python3 dns_edit.py -u -s -f dnsconfig.txt -t BT
+
+Merge Files (-m)   The Merge function allows for 2 dnsconfig files to be combined into
+		   one main file, the file you list first is the "main" file, the one which
+		   will contain all the IPs at the end. The secondary dnsconfig file will not
+		   change.
+
+		   Example of usage:
+		   Merge two files = python3 dns_edit.py -m -f1 main.txt -f2 combine.txt
+
+
+===================================================================================================
+			""")
+
 class commenter:
 
 	def __init__(self,file):
@@ -148,7 +188,7 @@ class combine:
 		line_array_1, line_array_2 = combine.read_files(files[0], files[1])
 		dictionary_of_entries = combine.make_dictionary(line_array_2)
 		final = combine.write_array_to_main(dictionary_of_entries, line_array_1, main_file)
-		
+
 	def remove_duplicates(file):
 		duplicate_found = False
 		index_loop_1 = 0
@@ -187,7 +227,7 @@ class add:
 
 	def presence_check(self, str_to_check):
 		file = self.file
-		temp_array = add.make_array(file)
+		temp_array = add.make_array(self)
 		if str_to_check in temp_array:
 			sys.exit("title already exists, when adding to an entry that already exists use add.ip")
 
@@ -199,7 +239,7 @@ class add:
 
 	def full_add(self, title, address, server):
 		file = self.file
-		array_of_entries = add.make_array(file)
+		array_of_entries = add.make_array(self)
 		array_to_add = []
 		array_to_add.append(title)
 		array_to_add.append(server)
@@ -213,7 +253,7 @@ class add:
 
 	def server_add(self, title, server):
 		file = self.file
-		array_of_entries = add.make_array(file)
+		array_of_entries = add.make_array()
 		array_to_add = []
 		array_to_add.append(title)
 		array_to_add.append(server)
@@ -226,7 +266,7 @@ class add:
 
 	def address_add(self, title, address):
 		file = self.file
-		array_of_entries = add.make_array(file)
+		array_of_entries = add.make_array(self)
 		array_to_add = []
 		array_to_add.append(title)
 		array_to_add.append(address)
@@ -242,14 +282,14 @@ class add:
 		file = self.file
 		if not title.startswith("#"):
 			title = "#" + title
-		add.presence_check(file, title)
+		add.presence_check(self, title)
 		if server != "" and address != "":
-			add.full_add(file, title, address, server)
+			add.full_add(self, title, address, server)
 		elif address != "":
-			add.address_add(file, title, address)
+			add.address_add(title, address)
 			pass	
 		elif server != "":
-			add.server_add(file, title, server)
+			add.server_add(title, server)
 			pass
 		else:
 			print("Error, please check usage and try again")
@@ -258,37 +298,39 @@ class add:
 		file = self.file
 		if not title.startswith("#"):
 			title = "#" + title
-		temp_array = add.make_array(file)
+		temp_array = add.make_array(self)
 		if not title in temp_array:
 			sys.exit("title doesnt exist, when adding an entry that doesnt exist you should use entry adding")
-		print("test")
+		add.address_add(self, title, ip)
 	
+if ("-h") in sys.argv:
+	help.script()
 
-commenting = commenter("test")
-commenting.uncomment_all()
+if sys.argv[2] == "-s" and sys.argv[3] == "-f" and sys.argv[4] != "" and sys.argv[5] == "-t" and sys.argv[6] != "":
+	file = sys.argv[4]
+	title = sys.argv[6]
+	commenting = commenter(file)
+	if sys.argv[1] == "-c":
+		commenting.comment_single(title) 
+	elif sys.argv[1] == "-u":
+		commenting.uncomment_single(title)
+	else:
+		sys.exit("Incorrect Usage, please read the help document (-h) and try again")
 
+elif sys.argv[2] == "-a" and sys.argv[3] == "-f" and sys.argv[4] != "":
+	file = sys.argv[4]
+	commenting = commenter(file)
+	if sys.argv[1] == "-c":
+		commenting.comment_all()
+	elif sys.argv[1] == "-u":
+		commenting.uncomment_all()
 
+elif sys.argv[1] == "-m" and sys.argv[2] == "-f1" and sys.argv[3] != "" and sys.argv[4] == "-f2" and sys.argv[5] != "":
+	file1 = sys.argv[3]
+	file2 = sys.argv[5]
+	combine.merge(file1, file2)
+	combine.remove_duplicates(file1)
 
-	
-#add.ip_adding("test", "youtube", "asdasd")
+else:
+	print("error")
 
-#combine.merge("test", "compare")
-
-#combine.remove_duplicates("test")
-
-#update_dnsmasq()
-
-# class Car():
-# 	def __init__(self,color,doors,gears,speed):
-# 		self.color = color
-# 		self.doors = doors
-# 		self.gears = gears
-# 		self.speed = speed
-# 	def crash(self):
-# 		print("BANG"*self.speed)
-# 	def changeSpeed(self,speed):
-# 		self.speed = speed
-
-# jakesCar = Car("black",5,5,120)
-
-# jakesCar.crash()
