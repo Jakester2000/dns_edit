@@ -1,6 +1,9 @@
 import os
 import sys
 
+hash_char = "#"
+new_line_char = "\n"
+
 def is_title(line):
 	return ("#" in line and "=" not in line)
 
@@ -37,13 +40,26 @@ Uncommenter (-u)   Works similar to Commenter function, you can either Uncomment
 
 Merge Files (-m)   The Merge function allows for 2 dnsconfig files to be combined into
 		   one main file, the file you list first is the "main" file, the one which
-		   will contain all the IPs at the end. The secondary dnsconfig file will not
-		   change.
+		   will contain all the IPs at the end. The secondary dnsconfig file will
+		   not change.
 
 		   Example of usage:
 		   Merge two files = python3 dns_edit.py -m -f1 main.txt -f2 combine.txt
 
+Entry Adding (-a)  This function allows the user to add entries to the dnsmasq config file.
+		   These entries must have a title but can either have a server, address or 
+		   both. Below are examples of how to use this function.
 
+		   Example of usage
+		   full add = python3 dns_edit.py -a -f dnsconfig.txt -t title -s server -a address
+		   server add = python3 dns_edit.py -a -f dnsconfig.txt -t title -s server
+		   address add = python3 dns_edit.py -a -f dnsconfig.txt -t title -a address
+
+Rem.Duplicate (-r) This function removes all duplicate entries in the file that holds the ips.
+		   Below is an example of how the usage works:
+
+		   Example of Usage:
+		   Remove Duplicates = python3 dns_edit.py -r -f dnsconfig.txt
 ===================================================================================================
 			""")
 
@@ -237,30 +253,32 @@ class add:
 			file_string = f.read()
 			return str(file_string).splitlines()
 
-	def full_add(self, title, address, server):
+	def full_add(self, title, server, address):
 		file = self.file
+		title = hash_char + title
+		address = address
+		server = server
 		array_of_entries = add.make_array(self)
 		array_to_add = []
-		array_to_add.append(title)
 		array_to_add.append(server)
 		array_to_add.append(address)
+		array_to_add.append(title)
 		new_entry = {
 					title:array_to_add
 		}
-		print(new_entry)
 		combine.write_array_to_main(new_entry, array_of_entries, file)
 		combine.remove_duplicates(file)
 
 	def server_add(self, title, server):
 		file = self.file
-		array_of_entries = add.make_array()
+		title = hash_char + title
+		array_of_entries = add.make_array(self)
 		array_to_add = []
 		array_to_add.append(title)
 		array_to_add.append(server)
 		new_entry = {
 					title:array_to_add
 		}
-		print(new_entry)
 		combine.write_array_to_main(new_entry, array_of_entries, file)
 		combine.remove_duplicates(file)
 
@@ -268,12 +286,11 @@ class add:
 		file = self.file
 		array_of_entries = add.make_array(self)
 		array_to_add = []
-		array_to_add.append(title)
 		array_to_add.append(address)
+		array_to_add.append(title)
 		new_entry = {
 					title:array_to_add
 		}
-		print(new_entry)
 		combine.write_array_to_main(new_entry, array_of_entries, file)
 		combine.remove_duplicates(file)
 		pass
@@ -300,12 +317,20 @@ class add:
 			title = "#" + title
 		temp_array = add.make_array(self)
 		if not title in temp_array:
-			sys.exit("title doesnt exist, when adding an entry that doesnt exist you should use entry adding")
+			temp_array.append(title)
 		add.address_add(self, title, ip)
+
+
+#below controls all the arguments the user enters, different if statements for different classes and functions
 	
+#runs the help script if user enters "-h"
 if ("-h") in sys.argv:
 	help.script()
 
+if len(sys.argv) < 3:
+	sys.exit()
+
+#If the user chooses either commenter or uncommenter SINGLE LINE this if statement is ran
 if sys.argv[2] == "-s" and sys.argv[3] == "-f" and sys.argv[4] != "" and sys.argv[5] == "-t" and sys.argv[6] != "":
 	file = sys.argv[4]
 	title = sys.argv[6]
@@ -317,6 +342,7 @@ if sys.argv[2] == "-s" and sys.argv[3] == "-f" and sys.argv[4] != "" and sys.arg
 	else:
 		sys.exit("Incorrect Usage, please read the help document (-h) and try again")
 
+#If the user chooses either commenter or uncommenter ALL this if statement is ran
 elif sys.argv[2] == "-a" and sys.argv[3] == "-f" and sys.argv[4] != "":
 	file = sys.argv[4]
 	commenting = commenter(file)
@@ -325,12 +351,39 @@ elif sys.argv[2] == "-a" and sys.argv[3] == "-f" and sys.argv[4] != "":
 	elif sys.argv[1] == "-u":
 		commenting.uncomment_all()
 
+#If the user chooses the merge file function this if statement is ran
 elif sys.argv[1] == "-m" and sys.argv[2] == "-f1" and sys.argv[3] != "" and sys.argv[4] == "-f2" and sys.argv[5] != "":
 	file1 = sys.argv[3]
 	file2 = sys.argv[5]
 	combine.merge(file1, file2)
 	combine.remove_duplicates(file1)
 
+#If the user chooses to add entries to the file this statement is ran
+elif sys.argv[1] == "-a" and sys.argv[2] == "-f" and sys.argv[3] != "":
+	file = sys.argv[3]
+	adding_object = add(file)
+	if len(sys.argv) == 8:
+		if sys.argv[4] == "-t" and sys.argv[5] != "" and sys.argv[6] != "" and sys.argv[7] != "":
+			adding_object.ip_adding(sys.argv[5], sys.argv[7])
+			print("Done!")
+	else:
+		pass
+	if len(sys.argv) == 10:
+		if sys.argv[4] == "-t" and sys.argv[5] != "" and sys.argv[6] == "-s" and sys.argv[7] != "" and sys.argv[8] == "-a" and sys.argv[9] != "":
+			adding_object.full_add(sys.argv[5], sys.argv[7], sys.argv[9])
+			print("Done!")
+	else:
+		pass
+	
+elif sys.argv[1] == "-r" and sys.argv[2] == "-f" and sys.argv[3] != "":
+	combine.remove_duplicates(sys.argv[3])
+
+#if they dont enter any arguments an error output is produced
+elif sys.argv[0] == "":
+	print("error, check usage in -h and try again")
+
+#if the syntax is incorrect then this else statement is ran
 else:
-	print("error")
+	print("error, check usage in -h and try again")
+
 
