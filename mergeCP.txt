@@ -1,0 +1,14 @@
+
+#bbc
+#*this is bbc entry
+server=/bbc.co.uk/10.10.10.10
+address=/bbc.co.uk/142.53.26.1
+
+#Tesco~
+server=/tesco.com/1.1.1.1
+address/tesco.com/152.53.7.126
+
+#twitter~
+#*twitter
+server=/twitter.com/4.4.4.4
+address=/twitter.org/127.46.25.64

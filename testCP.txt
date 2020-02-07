@@ -1,0 +1,14 @@
+
+#itv.com
+#*asdasdas
+server=/itv.com/12.12.12.12
+server=/itv.com/4.4.4.4
+
+#spotify~
+#*tesjjaks
+server=/spotify.com/8.8.8.8
+address=/spotify.fr/164.25.10.126
+
+#youtube
+server=/youtube.com/10.10.10.10
+address=/youtube.com/12.12.12.13

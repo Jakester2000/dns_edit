@@ -1,0 +1,8 @@
+
+#itv.com
+#*asdasdas
+server=/itv.com/12.12.12.12
+server=/itv.com/4.4.4.4
+ajkasdasdsjdk
+gsfajksfdjhakhasfas
+
